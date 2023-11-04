@@ -104,12 +104,17 @@ def lst_print(lst:list,new_line=1)->None:
 def formatting(string,padding):
     return f"{string:^{padding}}"
 
+def clear():
+    os.system('cls')
+    return
+
 def main(path=r"C:\\",filename=""):
     testcase=['1','2','3']
     auto_read_option=False
     frame_char='#'
     frame_const=60
     frame=frame_char*frame_const
+    clear()
     while True:
         c_file=path+filename
         print(frame)
@@ -118,23 +123,27 @@ def main(path=r"C:\\",filename=""):
         print(f"#{formatting('1.Execute File',frame_const-2)}#")
         print(f"#{formatting('2.Edit Path or Filename',frame_const-2)}#")
         print(f"#{formatting('3.Edit Testcase',frame_const-2)}#")
-        print(f"#{formatting('4.Toggle Auto-read logs (Default:False)',frame_const-2)}#")
+        print(f"#{formatting(f'4.Toggle Auto-read logs (Now:{auto_read_option})',frame_const-2)}#")
         print(f"#{formatting('5.Read logs',frame_const-2)}#")
         print(frame)
         print(f"#{formatting(f'File : {c_file}',frame_const-2)}#")
         print(frame)
         print(f"Testcase : {testcase}")
         select=input(">>> ")
+        
         if select=='0':
             quit()
         if select=='1':
+            clear()
             execution(c_file,testcase,auto_read_option)
         if select=='2':
+            clear()
             print("1.Change Path")
             print("2.Change Filename")
             select=input(">>> ")
             if select=='1':
                 while True:
+                    clear()
                     print("Now path :",path[:-1])
                     lst_print(folder_in_path(path))
                     print("Please enter the index to be change folder '0' to save and return menu")
@@ -142,53 +151,76 @@ def main(path=r"C:\\",filename=""):
                     try:
                         select=int(select)
                         if select<0:
+                            clear()
                             print("Wrong Input!!!")
                             break
                         elif select==0:
+                            clear()
                             print("The path has been successfully changed")
                             break
                         else:
                             path=folder_in_path(path)[select-1]+'\\'
                     except:
+                        clear()
                         print("Wrong Input!!!")
 
             if select=="2":
-                if file_in_path(path):
-                    lst_print(file_in_path(path))
-                    print("Please enter the index to change filename. '0' to return menu")
-                    select=input(">>> ")
-                    try:
-                        select=int(select)
-                        if select<0:
+                clear()
+                while True:
+                    if file_in_path(path):
+                        lst_print(file_in_path(path))
+                        print("Please enter the index to change filename. '0' to return menu")
+                        select=input(">>> ")
+                        try:
+                            select=int(select)
+                            if select<0:
+                                clear()
+                                print("Wrong Input!!!")
+                            elif select==0:
+                                break
+                            else:
+                                filename=file_in_path(path)[select-1]
+                                clear()
+                                print("The filename has been successfully changed")
+                                break
+                        except:
+                            clear()
                             print("Wrong Input!!!")
-                        elif select==0:
-                            pass
-                        else:
-                            filename=file_in_path(path)[select-1]
-                            print("The filename has been successfully changed")
-                    except:
-                        print("Wrong Input!!!")
-                else:
-                    print("No file in current path")
+                    else:
+                        clear()
+                        print("No file in current path")
+                        break
+            else:
+                clear()
                     
         if select=='3':
+            clear()
             while True:
+                lst_print(testcase)
+                print()
                 print("0.Return to the menu")
                 print("1.Add Testcase")
                 print("2.Remove Testcase")
                 select=input()
                 if select=='0':
+                    clear()
                     break
                 if select=='1':
+                    clear()
+                    lst_print(testcase)
+                    print()
                     print("Please enter additional testcase")
                     select=input()
                     testcase.append(select.replace("\\n","\n").replace("\\t","\t"))
+                    clear()
                 if select=='2':
                     if testcase:
-                        print("Current Input")
+                        clear()
                         lst_print(testcase)
+                        print()
                         print("Please enter the testcase want to remove, \'reset\' to remove all")
                         select=input()
+                        clear()
                         if select.lower()=='reset':
                             testcase=[]
                         else:
@@ -201,11 +233,13 @@ def main(path=r"C:\\",filename=""):
                             except:
                                 print("Wrong Input!!!")
                     else:
+                        clear()
                         print("Already Empty!!!")
         if select=='4':
+            clear()
             auto_read_option=not(auto_read_option)
-            print("Auto-read option : ",auto_read_option)
         if select=='5':
+            clear()
             read_log()
     
 if __name__=="__main__":
