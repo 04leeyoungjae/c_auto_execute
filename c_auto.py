@@ -33,7 +33,7 @@ def run_c_file(filename,testcase,max_timeout=3):
         output+=f"입력값\n{input_data}\n\n출력값\n"
         try:
             start=time.time()
-            result=subprocess.run([exe_filename],input=input_str,stdout=subprocess.PIPE,text=True,universal_newlines=True,timeout=max_timeout)
+            result=subprocess.run([exe_filename],input=input_str,stdout=subprocess.PIPE,text=True,universal_newlines=True,timeout=max_timeout,encoding="utf-8")
             end=time.time()
             if result.returncode!=0:
                 output+=(f"Error with return code {result.returncode}")
