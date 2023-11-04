@@ -61,11 +61,35 @@ def run_c_file(filename:str,testcase:list=None,max_timeout:int=3)->list:
     os.remove(exe_filename)
     return outputs   
 
-def execution(filename,testcase):
+def read_log(file='log.txt'):
+    with open(file,'r',encoding="utf-8") as f:
+        print(f.read())
+
+def execution(filename,testcase,option):
     with open("log.txt",'w',encoding="utf-8") as f:
         for output in run_c_file(filename,testcase):
-            print(output)
             f.write(output)
+    if option:
+        read_log()
+
+def file_in_path(path):
+    files=os.listdir(path)
+    result=[]
+    for file in files:
+        if file[-2:]==".c":
+            result.append(file)
+    return result
+
+def folder_in_path(path):
+    files=os.listdir(path)
+    result=[]
+    parent_folder = os.path.abspath(os.path.join(path,os.pardir))
+    result.append(parent_folder)
+    for file in files:
+        full_path=os.path.join(path,file)
+        if os.path.isdir(full_path):
+            result.append(full_path.replace("\\\\","\\"))
+    return result
 
 def lst_print(lst:list,new_line=1)->None:
     ending="\n"
@@ -80,8 +104,9 @@ def lst_print(lst:list,new_line=1)->None:
 def formatting(string,padding):
     return f"{string:^{padding}}"
 
-def main(path="./",filename="__test__.c"):
+def main(path=r"C:\\",filename=""):
     testcase=['1','2','3']
+    auto_read_option=False
     frame_char='#'
     frame_const=60
     frame=frame_char*frame_const
@@ -93,6 +118,8 @@ def main(path="./",filename="__test__.c"):
         print(f"#{formatting('1.Execute File',frame_const-2)}#")
         print(f"#{formatting('2.Edit Path or Filename',frame_const-2)}#")
         print(f"#{formatting('3.Edit Testcase',frame_const-2)}#")
+        print(f"#{formatting('4.Toggle Auto-read logs (Default:False)',frame_const-2)}#")
+        print(f"#{formatting('5.Read logs',frame_const-2)}#")
         print(frame)
         print(f"#{formatting(f'File : {c_file}',frame_const-2)}#")
         print(frame)
@@ -101,21 +128,49 @@ def main(path="./",filename="__test__.c"):
         if select=='0':
             quit()
         if select=='1':
-            execution(c_file,testcase)
+            execution(c_file,testcase,auto_read_option)
         if select=='2':
             print("1.Change Path")
             print("2.Change Filename")
             select=input(">>> ")
             if select=='1':
-                print("Please enter the path to be changed")
-                select=input(">>> ")
-                path=select+'\\'
-                print("The path has been successfully changed")
+                while True:
+                    print("Now path :",path[:-1])
+                    lst_print(folder_in_path(path))
+                    print("Please enter the index to be change folder '0' to save and return menu")
+                    select=input(">>> ")
+                    try:
+                        select=int(select)
+                        if select<0:
+                            print("Wrong Input!!!")
+                            break
+                        elif select==0:
+                            print("The path has been successfully changed")
+                            break
+                        else:
+                            path=folder_in_path(path)[select-1]+'\\'
+                    except:
+                        print("Wrong Input!!!")
+
             if select=="2":
-                print("Please enter the filename to be changed")
-                select=input(">>> ")
-                filename=select
-                print("The filename has been successfully changed")
+                if file_in_path(path):
+                    lst_print(file_in_path(path))
+                    print("Please enter the index to change filename. '0' to return menu")
+                    select=input(">>> ")
+                    try:
+                        select=int(select)
+                        if select<0:
+                            print("Wrong Input!!!")
+                        elif select==0:
+                            pass
+                        else:
+                            filename=file_in_path(path)[select-1]
+                            print("The filename has been successfully changed")
+                    except:
+                        print("Wrong Input!!!")
+                else:
+                    print("No file in current path")
+                    
         if select=='3':
             while True:
                 print("0.Return to the menu")
@@ -147,7 +202,11 @@ def main(path="./",filename="__test__.c"):
                                 print("Wrong Input!!!")
                     else:
                         print("Already Empty!!!")
-
+        if select=='4':
+            auto_read_option=not(auto_read_option)
+            print("Auto-read option : ",auto_read_option)
+        if select=='5':
+            read_log()
     
 if __name__=="__main__":
     main()
