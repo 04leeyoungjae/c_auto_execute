@@ -108,7 +108,7 @@ def clear():
     os.system('cls')
     return
 
-def main(path=r"C:\\",filename=""):
+def main(path="C:\\",filename=""):
     testcase=['1','2','3']
     auto_read_option=False
     frame_char='#'
@@ -133,10 +133,13 @@ def main(path=r"C:\\",filename=""):
         
         if select=='0':
             quit()
-        if select=='1':
+        elif select=='1':
             clear()
-            execution(c_file,testcase,auto_read_option)
-        if select=='2':
+            if filename=="":
+                print("You should select file before execution")
+            else:
+                execution(c_file,testcase,auto_read_option)
+        elif select=='2':
             clear()
             print("1.Change Path")
             print("2.Change Filename")
@@ -164,7 +167,7 @@ def main(path=r"C:\\",filename=""):
                         clear()
                         print("Wrong Input!!!")
 
-            if select=="2":
+            elif select=="2":
                 clear()
                 while True:
                     if file_in_path(path):
@@ -193,7 +196,7 @@ def main(path=r"C:\\",filename=""):
             else:
                 clear()
                     
-        if select=='3':
+        elif select=='3':
             clear()
             while True:
                 lst_print(testcase)
@@ -205,7 +208,7 @@ def main(path=r"C:\\",filename=""):
                 if select=='0':
                     clear()
                     break
-                if select=='1':
+                elif select=='1':
                     clear()
                     lst_print(testcase)
                     print()
@@ -213,7 +216,7 @@ def main(path=r"C:\\",filename=""):
                     select=input()
                     testcase.append(select.replace("\\n","\n").replace("\\t","\t"))
                     clear()
-                if select=='2':
+                elif select=='2':
                     if testcase:
                         clear()
                         lst_print(testcase)
@@ -235,12 +238,15 @@ def main(path=r"C:\\",filename=""):
                     else:
                         clear()
                         print("Already Empty!!!")
-        if select=='4':
+        elif select=='4':
             clear()
             auto_read_option=not(auto_read_option)
-        if select=='5':
+        elif select=='5':
             clear()
             read_log()
+        else:
+            clear()
+            print("Wrong Input!!!")
     
 if __name__=="__main__":
     main()
