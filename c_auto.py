@@ -109,7 +109,7 @@ def clear():
     return
 
 def main(path="C:\\",filename=""):
-    testcase=['1','2','3']
+    testcase=[]
     auto_read_option=False
     frame_char='#'
     frame_const=60
