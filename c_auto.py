@@ -17,17 +17,20 @@ def compile(filename):
 def run_c_file(filename,testcase):
     exe_filename,compile_error=compile(filename)
     outputs=[]
+    frame="==============================\n"
     if compile_error: #컴파일 에러시 실행해볼 필요가 없음
-        outputs.append("Compile Error")
+        output=frame+"Compile Error\n"+frame
+        outputs.append(output)
         return outputs
     for input_data in testcase:
-        output=''
+        output=frame
         output+=f"입력값 : {input_data}\n출력값 : "
-        result=subprocess.run([exe_filename],input=input_data,stdout=subprocess.PIPE,text=True)
+        result=subprocess.run([exe_filename],input=input_data,stdout=subprocess.PIPE,text=True,universal_newlines=True)
         if result.returncode!=0:
             output+=(f"Error with return code {result.returncode}")
         else:
             output+=(result.stdout)
+        output+="\n"+frame
         outputs.append(output)
     os.remove(exe_filename)
     return outputs   
@@ -35,4 +38,5 @@ def run_c_file(filename,testcase):
 
 filename="__test__.c"
 testcase=['','1','2']
-print(run_c_file(filename,testcase))
+for output in run_c_file(filename,testcase):
+    print(output)

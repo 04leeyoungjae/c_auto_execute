@@ -1,3 +1,7 @@
+/*
+테스트용 파일
+*/
+
 #include <stdio.h>
 
 int main(void)
