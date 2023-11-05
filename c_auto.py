@@ -251,7 +251,7 @@ def main(path="C:\\",filename=""):
                 print("0.Return to the menu")
                 print("1.Add Testcase")
                 print("2.Remove Testcase")
-                select=input()
+                select=input(">>> ")
                 if select=='0':
                     clear()
                     break
@@ -260,7 +260,7 @@ def main(path="C:\\",filename=""):
                     lst_print(testcase)
                     print()
                     print("Please enter additional testcase, 'random' to add random testcase")
-                    select=input()
+                    select=input(">>> ")
                     if select.lower()!="random":
                         testcase.append(select.replace("\\n","\n").replace("\\t","\t"))
                         clear()
@@ -272,7 +272,7 @@ def main(path="C:\\",filename=""):
                             if return_edit_testcase:
                                 break
                             print("Enter number of testcase you want to add '0' to return Edit testcase")
-                            select=input()
+                            select=input(">>> ")
                             clear()
                             if select=='0':                                
                                 break
@@ -282,7 +282,7 @@ def main(path="C:\\",filename=""):
                                     while True:
                                         print("0.Return Edit testcase")
                                         print("1.Random int Matrix")
-                                        select=input()
+                                        select=input(">>> ")
                                         clear()
                                         if select=='0':
                                             break
@@ -290,7 +290,7 @@ def main(path="C:\\",filename=""):
                                             while True: #num_row
                                                 print("Enter num_row, 'random minimum maxinum' to random")
                                                 print("ex. '5', 'random 2 10'")
-                                                select=input().split()
+                                                select=input(">>> ").split()
                                                 clear()
                                                 if len(select)==1:
                                                     try:
@@ -312,7 +312,7 @@ def main(path="C:\\",filename=""):
                                             while True: #num_col
                                                 print("Enter num_col, 'random minimum maxinum' to random")
                                                 print("ex. '5', 'random 2 10'")
-                                                select=input().split()
+                                                select=input(">>> ").split()
                                                 clear()
                                                 if len(select)==1:
                                                     try:
@@ -333,7 +333,7 @@ def main(path="C:\\",filename=""):
                                                             print("Wrong Input!!!")
                                             while True: #min_matrix_element
                                                 print("Enter minimum of matrix element")
-                                                select=input()
+                                                select=input(">>> ")
                                                 clear()
                                                 try:
                                                     min_matrix_element=int(select)
@@ -342,7 +342,7 @@ def main(path="C:\\",filename=""):
                                                     print("Wrong Input!!!")
                                             while True: #max_matrix_element
                                                 print("Enter maximum of matrix element")
-                                                select=input()
+                                                select=input(">>> ")
                                                 clear()
                                                 try:
                                                     max_matrix_element=int(select)
@@ -352,7 +352,7 @@ def main(path="C:\\",filename=""):
                                             while True: #view_row
                                                 print("Include the number of rows?")
                                                 print("1 to include, 0 to not")
-                                                select=input()
+                                                select=input(">>> ")
                                                 clear()
                                                 try:
                                                     view_row=int(select)
@@ -365,7 +365,7 @@ def main(path="C:\\",filename=""):
                                             while True: #view col
                                                 print("Include the number of cols?")
                                                 print("1 to include, 0 to not")
-                                                select=input()
+                                                select=input(">>> ")
                                                 clear()
                                                 try:
                                                     view_col=int(select)
@@ -390,7 +390,7 @@ def main(path="C:\\",filename=""):
                         lst_print(testcase)
                         print()
                         print("Please enter the testcase want to remove, \'reset\' to remove all")
-                        select=input()
+                        select=input(">>> ")
                         clear()
                         if select.lower()=='reset':
                             testcase=[]
@@ -414,7 +414,7 @@ def main(path="C:\\",filename=""):
             print("Enter the timeout per single execution (Seconds)")
             while True:
                 try:
-                    select=int(input())
+                    select=int(input(">>> "))
                     clear()
                     if(select<=0):
                         print("Please input more than 0 second")
