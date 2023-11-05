@@ -259,10 +259,67 @@ def main(path="C:\\",filename=""):
                     clear()
                     lst_print(testcase)
                     print()
-                    print("Please enter additional testcase")
+                    print("Please enter additional testcase, 'random' to add random testcase")
                     select=input()
-                    testcase.append(select.replace("\\n","\n").replace("\\t","\t"))
-                    clear()
+                    if select.lower()!="random":
+                        testcase.append(select.replace("\\n","\n").replace("\\t","\t"))
+                        clear()
+                        print("Successfully changed")
+                    else:
+                        clear()
+                        while True:
+                            print("Enter number of testcase you want to add '0' to return Edit testcase")
+                            select=input()
+                            clear()
+                            if select=='0':                                
+                                break
+                            else:
+                                try:
+                                    num_random_testcase=int(select)
+                                    while True:
+                                        print("0.Return Edit testcase")
+                                        print("1.Random int Matrix")
+                                        select=input()
+                                        clear()
+                                        if select=='0':
+                                            break
+                                        elif select=='1':
+                                            while True: #num_row
+                                                print("Enter num_row, 'random minimum maxinum' to random")
+                                                print("ex. '5', 'random 2 10'")
+                                                select=input().split()
+                                                clear()
+                                                if len(select)==1:
+                                                    try:
+                                                        random_row_min=int(select)
+                                                        random_row_max=int(select)
+                                                        break
+                                                    except:
+                                                        print("Wrong Input!!!")
+                                                elif len(select)==3:
+                                                    if select[0].lower()!="random":
+                                                        print("Wrong Input!!!")
+                                                    else:
+                                                        try:
+                                                            random_row_min=int(select[1])
+                                                            random_row_max=int(select[2])
+                                                            break
+                                                        except:
+                                                            print("Wrong Input!!!")
+                                            while True: #num_col
+                                                break
+                                            while True: #num_matrix_element
+                                                break
+                                            while True: #view_row
+                                                break
+                                            while True: #view col
+                                                break
+                                            while True: #append matrix input
+                                                break
+
+
+                                except:
+                                    print("Wrong Input!!!")
                 elif select=='2':
                     if testcase:
                         clear()
