@@ -64,10 +64,13 @@ def run_c_file(filename:str,testcase:list=None,max_timeout:int=3)->list:
 def read_log(file='log.txt'):
     with open(file,'r',encoding="utf-8") as f:
         print(f.read())
+    print("Press enter key to continue")
+    input()
+    return
 
-def execution(filename,testcase,option):
+def execution(filename,testcase,option,timeout):
     with open("log.txt",'w',encoding="utf-8") as f:
-        for output in run_c_file(filename,testcase):
+        for output in run_c_file(filename,testcase,timeout):
             f.write(output)
     if option:
         read_log()
@@ -113,33 +116,36 @@ def main(path="C:\\",filename=""):
     auto_read_option=False
     frame_char='#'
     frame_const=60
+    format_frame=frame_const-2
+    timeout=3
     frame=frame_char*frame_const
     clear()
     while True:
         c_file=path+filename
         print(frame)
-        print(f"#{formatting('MENU',frame_const-2)}#")
-        print(f"#{formatting('0.Exit',frame_const-2)}#")
-        print(f"#{formatting('1.Execute File',frame_const-2)}#")
-        print(f"#{formatting('2.Edit Path or Filename',frame_const-2)}#")
-        print(f"#{formatting('3.Edit Testcase',frame_const-2)}#")
-        print(f"#{formatting(f'4.Toggle Auto-read logs (Now:{auto_read_option})',frame_const-2)}#")
-        print(f"#{formatting('5.Read logs',frame_const-2)}#")
+        print(f"#{formatting('MENU',format_frame)}#")
+        print(f"#{formatting('0.Exit',format_frame)}#")
+        print(f"#{formatting('1.Execute File',format_frame)}#")
+        print(f"#{formatting('2.Edit Path or Filename',format_frame)}#")
+        print(f"#{formatting('3.Edit Testcase',format_frame)}#")
+        print(f"#{formatting(f'4.Toggle Auto-read logs (Current:{auto_read_option})',format_frame)}#")
+        print(f"#{formatting(f'5.Change Timeout (Current:{timeout})',format_frame)}#")
+        print(f"#{formatting('6.Read logs',format_frame)}#")
         print(frame)
-        print(f"#{formatting(f'File : {c_file}',frame_const-2)}#")
+        print(f"#{formatting(f'File : {c_file}',format_frame)}#")
         print(frame)
         print(f"Testcase : {testcase}")
         select=input(">>> ")
         
-        if select=='0':
+        if select=='0': #0.Exit
             quit()
-        elif select=='1':
+        elif select=='1': #1.Execute File
             clear()
             if filename=="":
                 print("You should select file before execution")
             else:
-                execution(c_file,testcase,auto_read_option)
-        elif select=='2':
+                execution(c_file,testcase,auto_read_option,timeout)
+        elif select=='2': #2.Edit Path or Filename
             clear()
             print("1.Change Path")
             print("2.Change Filename")
@@ -147,7 +153,7 @@ def main(path="C:\\",filename=""):
             if select=='1':
                 while True:
                     clear()
-                    print("Now path :",path[:-1])
+                    print("[0] Current path :",path[:-1])
                     lst_print(folder_in_path(path))
                     print("Please enter the index to be change folder '0' to save and return menu")
                     select=input(">>> ")
@@ -196,7 +202,7 @@ def main(path="C:\\",filename=""):
             else:
                 clear()
                     
-        elif select=='3':
+        elif select=='3': #3.Edit Testcase
             clear()
             while True:
                 lst_print(testcase)
@@ -238,10 +244,26 @@ def main(path="C:\\",filename=""):
                     else:
                         clear()
                         print("Already Empty!!!")
-        elif select=='4':
+        elif select=='4': #4.Toggle Auto-read logs
             clear()
             auto_read_option=not(auto_read_option)
-        elif select=='5':
+        elif select=='5': #5.Change Timeout
+            clear()
+            print("Enter the timeout per single execution (Seconds)")
+            while True:
+                try:
+                    select=int(input())
+                    clear()
+                    if(select<=0):
+                        print("Please input more than 0 second")
+                    else:
+                        timeout=select
+                        print("Successfully changed")
+                        break
+                except:
+                    clear()
+                    print("Wrong Input!!!")
+        elif select=='6':
             clear()
             read_log()
         else:
