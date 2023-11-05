@@ -283,7 +283,7 @@ def main(path="C:\\",filename=""):
                         while True:
                             if return_menu:
                                 break
-                            print("[0] Return Edit testcase")
+                            print("[0] Return Edit Testcase")
                             print("Enter number of testcase you want to add")
                             select=input_clear()
                             if select=='0':                                
@@ -292,9 +292,9 @@ def main(path="C:\\",filename=""):
                                 try:
                                     num_random_testcase=int(select)
                                     while True:
-                                        print("[0] Return Edit testcase")
-                                        print("[1] Random int Matrix")
-                                        print("[2] Random word generator")
+                                        print("[0] Return Edit Testcase")
+                                        print("[1] Random Integer Matrix")
+                                        print("[2] Random Word Generator")
                                         select=input_clear()
                                         if select=='0':
                                             break
