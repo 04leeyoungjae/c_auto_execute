@@ -61,21 +61,21 @@ def run_c_file(filename:str,testcase:list=None,max_timeout:int=3)->list:
     os.remove(exe_filename)
     return outputs   
 
-def read_log(file='log.txt'):
+def read_log(file:str='log.txt')->None:
     with open(file,'r',encoding="utf-8") as f:
         print(f.read())
     print("Press enter key to continue")
-    input()
+    input() #로그 읽을 동안 메뉴가 안뜨게 설정
     return
 
-def execution(filename,testcase,option,timeout):
+def execution(filename:str,testcase:list,option:bool,timeout:int)->None:
     with open("log.txt",'w',encoding="utf-8") as f:
         for output in run_c_file(filename,testcase,timeout):
             f.write(output)
     if option:
         read_log()
 
-def file_in_path(path):
+def file_in_path(path:str)->list:
     files=os.listdir(path)
     result=[]
     for file in files:
@@ -83,7 +83,7 @@ def file_in_path(path):
             result.append(file)
     return result
 
-def folder_in_path(path):
+def folder_in_path(path:str)->list:
     files=os.listdir(path)
     result=[]
     parent_folder = os.path.abspath(os.path.join(path,os.pardir))
@@ -104,12 +104,53 @@ def lst_print(lst:list,new_line=1)->None:
         print(f"[{i+1}]","".join(str(lst[i].replace("\n","\\n").replace("\t","\\t"))),end=ending)
     return
 
-def formatting(string,padding):
+def formatting(string:str,padding:int)->str:
     return f"{string:^{padding}}"
 
-def clear():
+def clear()->None:
     os.system('cls')
     return
+
+def random_int(minimum:int=0,maximum:int=100)->int:
+    return __import__('random').randint(minimum,maximum)
+
+def random_pseudo()->bool:
+    return random_int(0,1)
+
+def random_alphabet(uppercase:bool=0)->str:
+    if uppercase:
+        return chr(random_int(ord('A'),ord('Z')))
+    return chr(random_int(ord('a'),ord('z')))
+
+def random_word(length:int,uppercase:int=0)->str: #case=0 소문자단어 case=1 대문자단어 case2 첫글자만대문자
+    result=''
+    if uppercase==2: #첫글자만 대문자로
+        result+=random_alphabet(1)
+        length-=1
+        uppercase-=2
+    for i in range(length):
+        result+=random_alphabet(uppercase)
+    return result
+
+def random_list_int(length:int,minimum:int=0,maximum:int=100)->str:
+    result=''
+    for i in range(length):
+        result+=f"{random_int(minimum,maximum)} "
+    return result
+
+def random_matrix_int(row:int,col:int,minimum:int=0,maximum:int=100,view_row:bool=0,view_col:bool=0)->str:
+    result=''
+    if view_row:
+        result+=f"{row}"
+        if view_col:
+            result+=f" {col}\n"
+        else:
+            result+='\n'
+    elif view_col:
+        result+=f"{col}\n"
+    for i in range(row):
+        result+=f"{random_list_int(col,minimum,maximum)}\n"
+    return result
 
 def main(path="C:\\",filename=""):
     testcase=[]
