@@ -267,7 +267,10 @@ def main(path="C:\\",filename=""):
                         print("Successfully changed")
                     else:
                         clear()
+                        return_edit_testcase=False
                         while True:
+                            if return_edit_testcase:
+                                break
                             print("Enter number of testcase you want to add '0' to return Edit testcase")
                             select=input()
                             clear()
@@ -291,8 +294,8 @@ def main(path="C:\\",filename=""):
                                                 clear()
                                                 if len(select)==1:
                                                     try:
-                                                        random_row_min=int(select)
-                                                        random_row_max=int(select)
+                                                        random_row_min=int(select[0])
+                                                        random_row_max=int(select[0])
                                                         break
                                                     except:
                                                         print("Wrong Input!!!")
@@ -307,15 +310,76 @@ def main(path="C:\\",filename=""):
                                                         except:
                                                             print("Wrong Input!!!")
                                             while True: #num_col
-                                                break
-                                            while True: #num_matrix_element
-                                                break
+                                                print("Enter num_col, 'random minimum maxinum' to random")
+                                                print("ex. '5', 'random 2 10'")
+                                                select=input().split()
+                                                clear()
+                                                if len(select)==1:
+                                                    try:
+                                                        random_col_min=int(select[0])
+                                                        random_col_max=int(select[0])
+                                                        break
+                                                    except:
+                                                        print("Wrong Input!!!")
+                                                elif len(select)==3:
+                                                    if select[0].lower()!="random":
+                                                        print("Wrong Input!!!")
+                                                    else:
+                                                        try:
+                                                            random_col_min=int(select[1])
+                                                            random_col_max=int(select[2])
+                                                            break
+                                                        except:
+                                                            print("Wrong Input!!!")
+                                            while True: #min_matrix_element
+                                                print("Enter minimum of matrix element")
+                                                select=input()
+                                                clear()
+                                                try:
+                                                    min_matrix_element=int(select)
+                                                    break
+                                                except:
+                                                    print("Wrong Input!!!")
+                                            while True: #max_matrix_element
+                                                print("Enter maximum of matrix element")
+                                                select=input()
+                                                clear()
+                                                try:
+                                                    max_matrix_element=int(select)
+                                                    break
+                                                except:
+                                                    print("Wrong Input!!!")
                                             while True: #view_row
-                                                break
+                                                print("Include the number of rows?")
+                                                print("1 to include, 0 to not")
+                                                select=input()
+                                                clear()
+                                                try:
+                                                    view_row=int(select)
+                                                    if view_row!=1 and view_row!=0:
+                                                        print("Wrong Input!!!")
+                                                    else:
+                                                        break
+                                                except:
+                                                    print("Wrong Input!!!")
                                             while True: #view col
-                                                break
-                                            while True: #append matrix input
-                                                break
+                                                print("Include the number of cols?")
+                                                print("1 to include, 0 to not")
+                                                select=input()
+                                                clear()
+                                                try:
+                                                    view_col=int(select)
+                                                    if view_col!=1 and view_col!=0:
+                                                        print("Wrong Input!!!")
+                                                    else:
+                                                        break
+                                                except:
+                                                    print("Wrong Input!!!")
+                                            for i in range(num_random_testcase): #append matrix input
+                                                testcase.append(random_matrix_int(random_int(random_row_min,random_row_max),random_int(random_col_min,random_col_max),min_matrix_element,max_matrix_element,view_row,view_col))
+                                            print("Successfully changed")
+                                            return_edit_testcase=True
+                                            break
 
 
                                 except:
