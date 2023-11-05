@@ -8,7 +8,7 @@ import os
 import time
 
 def visual_whitespace(string:str)->str:
-    return string.replace("\n","\\n").replace("\t","\\t").replace(" ","<space>")
+    return string.replace('\n',"\\n").replace('\t',"\\t").replace(' ',"<space>")
 
 def compile(filename:str)->tuple:
     exe_filename="tmp.exe"
@@ -91,26 +91,28 @@ def folder_in_path(path:str)->list:
     for file in files:
         full_path=os.path.join(path,file)
         if os.path.isdir(full_path):
-            result.append(full_path.replace("\\\\","\\"))
+            result.append(full_path.replace("\\\\",'\\'))
     return result
 
 def lst_print(lst:list,new_line=1)->None:
-    ending="\n"
+    ending='\n'
     if not new_line:
         ending=" "
     if not lst:
         print("[Void]",end=ending)
     for i in range(len(lst)):
-        print(f"[{i+1}]","".join(str(lst[i].replace("\n","\\n").replace("\t","\\t"))),end=ending)
+        print(f"[{i+1}]",''.join(str(lst[i].replace('\n',"\\n").replace('\t',"\\t"))),end=ending)
     return
 
 def formatting(string:str,padding:int)->str:
     return f"{string:^{padding}}"
 
 def clear()->None:
-    os.system('cls')
+    os.system("cls")
     return
+
 def input_clear()->str:
+    print()
     result=input(">>> ")
     clear()
     return result
@@ -137,7 +139,19 @@ def random_word(length:int,uppercase:int=0)->str: #case=0 소문자단어 case=1
             result+=random_alphabet(uppercase)
     else:
         for i in range(length):
-            result+=random_alphabet(random_pseudo)
+            result+=random_alphabet(random_pseudo())
+    return result
+
+def random_list_word(num_word,len_word,case,view_num_word,view_len_word):
+    result=''
+    if view_num_word:
+        result+=f"{num_word}"
+    if view_len_word:
+        result+=f" {len_word}\n"
+    else:
+        result+='\n'
+    for i in range(num_word):
+        result+=f"{random_word(len_word,case)} "
     return result
 
 def random_list_int(length:int,minimum:int=0,maximum:int=100)->str:
@@ -168,22 +182,25 @@ def main(path="C:\\",filename=""):
     format_frame=frame_const-2
     timeout=3
     frame=frame_char*frame_const
+    view_testcase=True
     clear()
     while True:
         c_file=path+filename
         print(frame)
         print(f"#{formatting('MENU',format_frame)}#")
-        print(f"#{formatting('0.Exit',format_frame)}#")
-        print(f"#{formatting('1.Execute File',format_frame)}#")
-        print(f"#{formatting('2.Edit Path or Filename',format_frame)}#")
-        print(f"#{formatting('3.Edit Testcase',format_frame)}#")
-        print(f"#{formatting(f'4.Toggle Auto-read logs (Current:{auto_read_option})',format_frame)}#")
-        print(f"#{formatting(f'5.Change Timeout (Current:{timeout*1000:.0f} ms)',format_frame)}#")
-        print(f"#{formatting('6.Read logs',format_frame)}#")
+        print(f"#{formatting('[0] Exit',format_frame)}#")
+        print(f"#{formatting('[1] Execute File',format_frame)}#")
+        print(f"#{formatting('[2] Edit Path or Filename',format_frame)}#")
+        print(f"#{formatting('[3] Edit Testcase',format_frame)}#")
+        print(f"#{formatting(f'[4] Toggle Auto-read logs (Current:{auto_read_option})',format_frame)}#")
+        print(f"#{formatting(f'[5] Change Timeout (Current:{timeout*1000:.0f} ms)',format_frame)}#")
+        print(f"#{formatting(f'[6] Toggle View testcases(Current:{view_testcase})',format_frame)}#")
+        print(f"#{formatting('[7] Read logs',format_frame)}#")
         print(frame)
         print(f"#{formatting(f'File : {c_file}',format_frame)}#")
         print(frame)
-        print(f"Testcase : {testcase}")
+        if view_testcase:
+            print(f"Testcase : {testcase}")
         select=input_clear()
         
         if select=='0': #0.Exit
@@ -194,8 +211,8 @@ def main(path="C:\\",filename=""):
             else:
                 execution(c_file,testcase,auto_read_option,timeout)
         elif select=='2': #2.Edit Path or Filename
-            print("1.Change Path")
-            print("2.Change Filename")
+            print("[1] Change Path")
+            print("[2] Change Filename")
             select=input_clear()
             if select=='1':
                 while True:
@@ -247,16 +264,17 @@ def main(path="C:\\",filename=""):
                     break                
                 lst_print(testcase)
                 print()
-                print("0.Return to the menu")
-                print("1.Add Testcase")
-                print("2.Remove Testcase")
+                print("[0] Return to the menu")
+                print("[1] Add Testcase")
+                print("[2] Remove Testcase")
                 select=input_clear()
                 if select=='0':
                     break
                 elif select=='1':
                     lst_print(testcase)
                     print()
-                    print("Please enter additional testcase, 'random' to add random testcase")
+                    print("Please enter any additional testcase")
+                    print("[Random] add random testcases")
                     select=input_clear()
                     if select.lower()!="random":
                         testcase.append(select.replace("\\n","\n").replace("\\t","\t"))
@@ -265,7 +283,8 @@ def main(path="C:\\",filename=""):
                         while True:
                             if return_menu:
                                 break
-                            print("Enter number of testcase you want to add '0' to return Edit testcase")
+                            print("[0] Return Edit testcase")
+                            print("Enter number of testcase you want to add")
                             select=input_clear()
                             if select=='0':                                
                                 break
@@ -273,8 +292,9 @@ def main(path="C:\\",filename=""):
                                 try:
                                     num_random_testcase=int(select)
                                     while True:
-                                        print("0.Return Edit testcase")
-                                        print("1.Random int Matrix")
+                                        print("[0] Return Edit testcase")
+                                        print("[1] Random int Matrix")
+                                        print("[2] Random word generator")
                                         select=input_clear()
                                         if select=='0':
                                             break
@@ -301,7 +321,7 @@ def main(path="C:\\",filename=""):
                                                         except:
                                                             print("Wrong Input!!!")
                                             while True: #num_col
-                                                print("Enter num_col, 'random minimum maxinum' to random")
+                                                print("Enter num_column, 'random minimum maxinum' to random")
                                                 print("ex. '5', 'random 2 10'")
                                                 select=input_clear().split()
                                                 if len(select)==1:
@@ -339,7 +359,8 @@ def main(path="C:\\",filename=""):
                                                     print("Wrong Input!!!")
                                             while True: #view_row
                                                 print("Include the number of rows?")
-                                                print("1 to include, 0 to not")
+                                                print("[0] Not Include")
+                                                print("[1] Include")
                                                 select=input_clear()
                                                 try:
                                                     view_row=int(select)
@@ -351,7 +372,8 @@ def main(path="C:\\",filename=""):
                                                     print("Wrong Input!!!")
                                             while True: #view col
                                                 print("Include the number of cols?")
-                                                print("1 to include, 0 to not")
+                                                print("[0] Not Include")
+                                                print("[1] Include")
                                                 select=input_clear()
                                                 try:
                                                     view_col=int(select)
@@ -366,13 +388,103 @@ def main(path="C:\\",filename=""):
                                             print("Successfully changed")
                                             return_menu=True
                                             break
+                                        elif select=='2':
+                                            while True: #num_word
+                                                print("Enter num_word, 'random minimum maxinum' to random")
+                                                print("ex. '5', 'random 2 10'")
+                                                select=input_clear().split()
+                                                if len(select)==1:
+                                                    try:
+                                                        num_word_min=int(select[0])
+                                                        num_word_max=int(select[0])
+                                                        break
+                                                    except:
+                                                        print("Wrong Input!!!")
+                                                elif len(select)==3:
+                                                    if select[0].lower()!="random":
+                                                        print("Wrong Input!!!")
+                                                    else:
+                                                        try:
+                                                            num_word_min=int(select[1])
+                                                            num_word_max=int(select[2])
+                                                            break
+                                                        except:
+                                                            print("Wrong Input!!!")
+                                            while True: #len_word
+                                                print("Enter word length, 'random minimum maxinum' to random")
+                                                print("ex. '5', 'random 2 10'")
+                                                select=input_clear().split()
+                                                if len(select)==1:
+                                                    try:
+                                                        len_word_min=int(select[0])
+                                                        len_word_max=int(select[0])
+                                                        break
+                                                    except:
+                                                        print("Wrong Input!!!")
+                                                elif len(select)==3:
+                                                    if select[0].lower()!="random":
+                                                        print("Wrong Input!!!")
+                                                    else:
+                                                        try:
+                                                            len_word_min=int(select[1])
+                                                            len_word_max=int(select[2])
+                                                            break
+                                                        except:
+                                                            print("Wrong Input!!!")
+                                            while True: #case_word
+                                                print("[0] All lowercase")
+                                                print("[1] All uppercase")
+                                                print("[2] First letter uppercase")
+                                                print("[3] Mix of upper and lower")
+                                                select=input_clear()
+                                                try:
+                                                    select=int(select)
+                                                    if select!=0 and select!=1 and select!=2 and select!=3:
+                                                        print("Wrong Input!!!")
+                                                    else:
+                                                        case_word=select
+                                                        break
+                                                except:
+                                                    print("Wrong Input!!!")
+                                            while True: #view_num_word
+                                                print("Include the number of words?")
+                                                print("[0] Not Include")
+                                                print("[1] Include")
+                                                select=input_clear()
+                                                try:
+                                                    view_num_word=int(select)
+                                                    if view_num_word!=1 and view_num_word!=0:
+                                                        print("Wrong Input!!!")
+                                                    else:
+                                                        break
+                                                except:
+                                                    print("Wrong Input!!!")
+                                            while True: #view_num_word
+                                                print("Include the number of words?")
+                                                print("[0] Not Include")
+                                                print("[1] Include")
+                                                select=input_clear()
+                                                try:
+                                                    view_len_word=int(select)
+                                                    if view_len_word!=1 and view_len_word!=0:
+                                                        print("Wrong Input!!!")
+                                                    else:
+                                                        break
+                                                except:
+                                                    print("Wrong Input!!!")
+                                            for i in range(num_random_testcase):
+                                                testcase.append(random_list_word(random_int(num_word_min,num_word_max),random_int(len_word_min,len_word_max),case_word,view_num_word,view_len_word))
+                                            print("Successfully changed")
+                                            return_menu=True
+                                            break                                                
                                 except:
                                     print("Wrong Input!!!")
                 elif select=='2':
                     if testcase:
                         lst_print(testcase)
                         print()
-                        print("Please enter the testcase want to remove, \'reset\' to remove all")
+                        print("[Reset] Remove all testcase")
+                        print("Please enter the index of testcase want to remove")
                         select=input_clear()
                         if select.lower()=='reset':
                             testcase=[]
@@ -403,6 +515,8 @@ def main(path="C:\\",filename=""):
                 except:
                     print("Wrong Input!!!")
         elif select=='6':
+            view_testcase=not(view_testcase)
+        elif select=='7':
             read_log()
         else:
             print("Wrong Input!!!")
