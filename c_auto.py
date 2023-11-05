@@ -18,7 +18,7 @@ def compile(filename:str)->tuple:
         compile_error=True
     return exe_filename, compile_error
 
-def run_c_file(filename:str,testcase:list=None,max_timeout:int=3)->list:
+def run_c_file(filename:str,testcase:list=None,max_timeout:float=3.0)->list:
     if not testcase:
         testcase=['']
     exe_filename,compile_error=compile(filename)
@@ -110,6 +110,10 @@ def formatting(string:str,padding:int)->str:
 def clear()->None:
     os.system('cls')
     return
+def input_clear()->str:
+    result=input(">>> ")
+    clear()
+    return result
 
 def random_int(minimum:int=0,maximum:int=100)->int:
     return __import__('random').randint(minimum,maximum)
@@ -122,14 +126,18 @@ def random_alphabet(uppercase:bool=0)->str:
         return chr(random_int(ord('A'),ord('Z')))
     return chr(random_int(ord('a'),ord('z')))
 
-def random_word(length:int,uppercase:int=0)->str: #case=0 소문자단어 case=1 대문자단어 case2 첫글자만대문자
+def random_word(length:int,uppercase:int=0)->str: #case=0 소문자단어 case=1 대문자단어 case2 첫글자만대문자 case3 섞어서
     result=''
     if uppercase==2: #첫글자만 대문자로
         result+=random_alphabet(1)
         length-=1
         uppercase-=2
-    for i in range(length):
-        result+=random_alphabet(uppercase)
+    if uppercase!=3:
+        for i in range(length):
+            result+=random_alphabet(uppercase)
+    else:
+        for i in range(length):
+            result+=random_alphabet(random_pseudo)
     return result
 
 def random_list_int(length:int,minimum:int=0,maximum:int=100)->str:
@@ -170,110 +178,95 @@ def main(path="C:\\",filename=""):
         print(f"#{formatting('2.Edit Path or Filename',format_frame)}#")
         print(f"#{formatting('3.Edit Testcase',format_frame)}#")
         print(f"#{formatting(f'4.Toggle Auto-read logs (Current:{auto_read_option})',format_frame)}#")
-        print(f"#{formatting(f'5.Change Timeout (Current:{timeout})',format_frame)}#")
+        print(f"#{formatting(f'5.Change Timeout (Current:{timeout*1000:.0f} ms)',format_frame)}#")
         print(f"#{formatting('6.Read logs',format_frame)}#")
         print(frame)
         print(f"#{formatting(f'File : {c_file}',format_frame)}#")
         print(frame)
         print(f"Testcase : {testcase}")
-        select=input(">>> ")
+        select=input_clear()
         
         if select=='0': #0.Exit
             quit()
         elif select=='1': #1.Execute File
-            clear()
             if filename=="":
                 print("You should select file before execution")
             else:
                 execution(c_file,testcase,auto_read_option,timeout)
         elif select=='2': #2.Edit Path or Filename
-            clear()
             print("1.Change Path")
             print("2.Change Filename")
-            select=input(">>> ")
+            select=input_clear()
             if select=='1':
                 while True:
-                    clear()
                     print("[0] Current path :",path[:-1])
                     lst_print(folder_in_path(path))
                     print("Please enter the index to be change folder '0' to save and return menu")
-                    select=input(">>> ")
+                    select=input_clear()
                     try:
                         select=int(select)
                         if select<0:
-                            clear()
                             print("Wrong Input!!!")
                             break
                         elif select==0:
-                            clear()
                             print("The path has been successfully changed")
                             break
                         else:
                             path=folder_in_path(path)[select-1]+'\\'
                     except:
-                        clear()
                         print("Wrong Input!!!")
 
             elif select=="2":
-                clear()
                 while True:
                     if file_in_path(path):
                         lst_print(file_in_path(path))
                         print("Please enter the index to change filename. '0' to return menu")
-                        select=input(">>> ")
+                        select=input_clear()
                         try:
                             select=int(select)
                             if select<0:
-                                clear()
                                 print("Wrong Input!!!")
                             elif select==0:
                                 break
                             else:
                                 filename=file_in_path(path)[select-1]
-                                clear()
                                 print("The filename has been successfully changed")
                                 break
                         except:
-                            clear()
                             print("Wrong Input!!!")
                     else:
-                        clear()
                         print("No file in current path")
                         break
             else:
-                clear()
+                pass
                     
         elif select=='3': #3.Edit Testcase
-            clear()
+            return_menu=False
             while True:
+                if return_menu:
+                    break                
                 lst_print(testcase)
                 print()
                 print("0.Return to the menu")
                 print("1.Add Testcase")
                 print("2.Remove Testcase")
-                select=input(">>> ")
+                select=input_clear()
                 if select=='0':
-                    clear()
                     break
                 elif select=='1':
-                    clear()
                     lst_print(testcase)
                     print()
                     print("Please enter additional testcase, 'random' to add random testcase")
-                    select=input(">>> ")
+                    select=input_clear()
                     if select.lower()!="random":
                         testcase.append(select.replace("\\n","\n").replace("\\t","\t"))
-                        clear()
                         print("Successfully changed")
                     else:
-                        clear()
-                        return_edit_testcase=False
                         while True:
-                            if return_edit_testcase:
+                            if return_menu:
                                 break
                             print("Enter number of testcase you want to add '0' to return Edit testcase")
-                            select=input(">>> ")
-                            clear()
+                            select=input_clear()
                             if select=='0':                                
                                 break
                             else:
@@ -282,16 +275,14 @@ def main(path="C:\\",filename=""):
                                     while True:
                                         print("0.Return Edit testcase")
                                         print("1.Random int Matrix")
-                                        select=input(">>> ")
-                                        clear()
+                                        select=input_clear()
                                         if select=='0':
                                             break
                                         elif select=='1':
                                             while True: #num_row
                                                 print("Enter num_row, 'random minimum maxinum' to random")
                                                 print("ex. '5', 'random 2 10'")
-                                                select=input(">>> ").split()
-                                                clear()
+                                                select=input_clear().split()
                                                 if len(select)==1:
                                                     try:
                                                         random_row_min=int(select[0])
@@ -312,8 +303,7 @@ def main(path="C:\\",filename=""):
                                             while True: #num_col
                                                 print("Enter num_col, 'random minimum maxinum' to random")
                                                 print("ex. '5', 'random 2 10'")
-                                                select=input(">>> ").split()
-                                                clear()
+                                                select=input_clear().split()
                                                 if len(select)==1:
                                                     try:
                                                         random_col_min=int(select[0])
@@ -333,8 +323,7 @@ def main(path="C:\\",filename=""):
                                                             print("Wrong Input!!!")
                                             while True: #min_matrix_element
                                                 print("Enter minimum of matrix element")
-                                                select=input(">>> ")
-                                                clear()
+                                                select=input_clear()
                                                 try:
                                                     min_matrix_element=int(select)
                                                     break
@@ -342,8 +331,7 @@ def main(path="C:\\",filename=""):
                                                     print("Wrong Input!!!")
                                             while True: #max_matrix_element
                                                 print("Enter maximum of matrix element")
-                                                select=input(">>> ")
-                                                clear()
+                                                select=input_clear()
                                                 try:
                                                     max_matrix_element=int(select)
                                                     break
@@ -352,8 +340,7 @@ def main(path="C:\\",filename=""):
                                             while True: #view_row
                                                 print("Include the number of rows?")
                                                 print("1 to include, 0 to not")
-                                                select=input(">>> ")
-                                                clear()
+                                                select=input_clear()
                                                 try:
                                                     view_row=int(select)
                                                     if view_row!=1 and view_row!=0:
@@ -365,8 +352,7 @@ def main(path="C:\\",filename=""):
                                             while True: #view col
                                                 print("Include the number of cols?")
                                                 print("1 to include, 0 to not")
-                                                select=input(">>> ")
-                                                clear()
+                                                select=input_clear()
                                                 try:
                                                     view_col=int(select)
                                                     if view_col!=1 and view_col!=0:
@@ -378,20 +364,16 @@ def main(path="C:\\",filename=""):
                                             for i in range(num_random_testcase): #append matrix input
                                                 testcase.append(random_matrix_int(random_int(random_row_min,random_row_max),random_int(random_col_min,random_col_max),min_matrix_element,max_matrix_element,view_row,view_col))
                                             print("Successfully changed")
-                                            return_edit_testcase=True
+                                            return_menu=True
                                             break
-
-
                                 except:
                                     print("Wrong Input!!!")
                 elif select=='2':
                     if testcase:
-                        clear()
                         lst_print(testcase)
                         print()
                         print("Please enter the testcase want to remove, \'reset\' to remove all")
-                        select=input(">>> ")
-                        clear()
+                        select=input_clear()
                         if select.lower()=='reset':
                             testcase=[]
                         else:
@@ -404,32 +386,25 @@ def main(path="C:\\",filename=""):
                             except:
                                 print("Wrong Input!!!")
                     else:
-                        clear()
                         print("Already Empty!!!")
         elif select=='4': #4.Toggle Auto-read logs
-            clear()
             auto_read_option=not(auto_read_option)
         elif select=='5': #5.Change Timeout
-            clear()
-            print("Enter the timeout per single execution (Seconds)")
             while True:
+                print("Enter the timeout per single execution (ms)")
                 try:
-                    select=int(input(">>> "))
-                    clear()
+                    select=float(input_clear())
                     if(select<=0):
                         print("Please input more than 0 second")
                     else:
-                        timeout=select
+                        timeout=select/1000
                         print("Successfully changed")
                         break
                 except:
-                    clear()
                     print("Wrong Input!!!")
         elif select=='6':
-            clear()
             read_log()
         else:
-            clear()
             print("Wrong Input!!!")
     
 if __name__=="__main__":
