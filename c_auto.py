@@ -7,13 +7,21 @@ import subprocess
 import os
 import time
 
+def default_setup():
+    path="C:\\"
+    filename=''
+    testcase=[]
+    auto_read_option=True
+    timeout=3
+    view_testcase=True
+    return path,filename,testcase,auto_read_option,timeout,view_testcase
+
 def visible_whitespace(string:str)->str:
     return string.replace('\n',"\\n").replace('\t',"\\t").replace(' ',"<space>").replace('\0',"\\0")
 
 def invisible_whitespace(string:str)->str:
     return string.replace('\\n',"\n").replace('\\t',"\t").replace('<space>'," ").replace('\\0',"\0")
     
-
 def compile(filename:str)->tuple:
     exe_filename="tmp.exe"
     compile_error=False
@@ -55,22 +63,23 @@ def run_c_file(filename:str,testcase:list=None,max_timeout:float=3.0)->list:
                     output+=result.stdout
             output+="\n\n"
             output+=f"실행시간 : [{(end_time-start_time)*1000:.2f} ms]\n"+frame
-
         except subprocess.TimeoutExpired:
             output+=f"<!--Timeout--!>\n\n실행시간 : [Timeover {max_timeout*1000} ms]\n"+frame
-
         finally:
             outputs.append(output)
-
     os.remove(exe_filename)
     return outputs   
 
 def read_log(file:str='log.txt')->None:
-    with open(file,'r',encoding="utf-8") as f:
-        print(f.read())
-    print("Press enter key to continue")
-    input() #로그 읽을 동안 메뉴가 안뜨게 설정
-    return
+    try:
+        with open(file,'r',encoding="utf-8") as f:
+            print(f.read())
+        print("Press enter key to continue")
+        input() #로그 읽을 동안 메뉴가 안뜨게 설정
+        return
+    except:
+        print("Can't read log")
+        return
 
 def execution(filename:str,testcase:list,option:bool,timeout:int)->None:
     with open("log.txt",'w',encoding="utf-8") as f:
@@ -150,10 +159,10 @@ def random_list_word(num_word,len_word,case,view_num_word,view_len_word):
     result=''
     if view_num_word:
         result+=f"{num_word}"
-    if view_len_word:
-        result+=f" {len_word}\n"
-    else:
-        result+='\n'
+        if view_len_word:
+            result+=f" {len_word}\n"
+        else:
+            result+='\n'
     for i in range(num_word):
         result+=f"{random_word(len_word,case)} "
     return result
@@ -180,8 +189,11 @@ def random_matrix_int(row:int,col:int,minimum:int=0,maximum:int=100,view_row:boo
 
 def random_matrix_generator(num_random_testcase):
     while True: #num_row
-        print("Enter num_row, 'random minimum maxinum' to random")
-        print("ex. '5', 'random 2 10'")
+        print("[NUMBER] row to add")
+        print()
+        print("[random minimum maximum] random row")
+        print("ex. 3 -> 3 row")
+        print("ex. Random 1 5 -> 1~5 row")
         select=input_clear().split()
         if len(select)==1:
             try:
@@ -202,8 +214,11 @@ def random_matrix_generator(num_random_testcase):
                     print("Wrong Input!!!")
                       
     while True: #num_col
-        print("Enter num_column, 'random minimum maxinum' to random")
-        print("ex. '5', 'random 2 10'")
+        print("[NUMBER] column to add")
+        print()
+        print("[random minimum maximum] random column")
+        print("ex. 3 -> 3 column")
+        print("ex. Random 1 5 -> 1~5 column")
         select=input_clear().split()
         if len(select)==1:
             try:
@@ -223,7 +238,7 @@ def random_matrix_generator(num_random_testcase):
                 except:
                     print("Wrong Input!!!")
     while True: #min_matrix_element
-        print("Enter minimum of matrix element")
+        print("[NUMBER] Minimum of matrix element")
         select=input_clear()
         try:
             min_matrix_element=int(select)
@@ -231,7 +246,7 @@ def random_matrix_generator(num_random_testcase):
         except:
             print("Wrong Input!!!")
     while True: #max_matrix_element
-        print("Enter maximum of matrix element")
+        print("[NUMBER] Maximum of matrix element")
         select=input_clear()
         try:
             max_matrix_element=int(select)
@@ -271,8 +286,11 @@ def random_matrix_generator(num_random_testcase):
 
 def random_word_generator(num_random_testcase):
     while True: #num_word
-        print("Enter num_word, 'random minimum maxinum' to random")
-        print("ex. '5', 'random 2 10'")
+        print("[NUMBER] Number words to add")
+        print()
+        print("[random minimum maximum] Random number of words")
+        print("ex. 3 -> 3 words")
+        print("ex. Random 1 5 -> 1~5 words")
         select=input_clear().split()
         if len(select)==1:
             try:
@@ -292,8 +310,11 @@ def random_word_generator(num_random_testcase):
                 except:
                     print("Wrong Input!!!")
     while True: #len_word
-        print("Enter word length, 'random minimum maxinum' to random")
-        print("ex. '5', 'random 2 10'")
+        print("[NUMBER] Specific length")
+        print()
+        print("[random minimum maximum] Random length")
+        print("ex. 3 -> 3 length word")
+        print("ex. Random 1 5 -> 1~5 length word")
         select=input_clear().split()
         if len(select)==1:
             try:
@@ -341,7 +362,7 @@ def random_word_generator(num_random_testcase):
         except:
             print("Wrong Input!!!")
     while True: #view_num_word
-        print("Include the number of words?")
+        print("Include the length of words?")
         print("[0] Not Include")
         print("[1] Include")
         select=input_clear()
@@ -387,7 +408,7 @@ def execute_file(filename,c_file,testcase,auto_read_option,timeout):
 
 def change_timeout():
     while True:
-        print("Enter the timeout per single execution (ms)")
+        print("[NUMBER] timeout per single execution (ms)")
         try:
             select=float(input_clear())
             if(select<=0):
@@ -401,16 +422,17 @@ def change_timeout():
 
 def change_path(path):
     while True:
-        print("[0] Current path :",path[:-1])
+        print("[0] Save current path :",path[:-1])
         lst_print(folder_in_path(path))
-        print("Please enter the index to be change folder '0' to save and return menu")
+        print()
+        print("[INDEX] Change folder")
         select=input_clear()
         try:
             select=int(select)
             if select<0:
                 print("Wrong Input!!!")
             elif select==0:
-                print("The path has been successfully changed")
+                print("The path has been successfully changed into",path)
                 return path
             else:
                 path=folder_in_path(path)[select-1]+'\\'
@@ -421,8 +443,8 @@ def change_file(path):
     while True:
         if file_in_path(path):
             lst_print(file_in_path(path))
-            print("[0] Return Menu")
-            print("Please enter the index to change filename.")
+            print()
+            print("[INDEX] Change filename.")
             select=input_clear()
             try:
                 select=int(select)
@@ -432,7 +454,8 @@ def change_file(path):
                     return None
                 else:
                     filename=file_in_path(path)[select-1]
-                    print("The filename has been successfully changed")
+                    print("The filename has been successfully changed into",filename)
+                    print("Current File is ",path+filename)
                     return filename
             except:
                 print("Wrong Input!!!")
@@ -444,8 +467,9 @@ def remove_testcase(testcase):
     while testcase:
         lst_print(testcase)
         print()
-        print("[Reset] Remove all testcase")
-        print("[Index] Remove index of testcase")
+        print("[INDEX] Remove index of testcase")
+        print()
+        print("[reset] Remove all testcase")
         print("[0] Return Edit testcase")
         select=input_clear()
         if select.lower()=='reset':
@@ -467,8 +491,9 @@ def add_testcase(testcase):
     while True:
         lst_print(testcase)
         print()
-        print("[Any testcase] Enter additional testcase")
-        print("[Random] add random testcases")
+        print("[ANY TESTCASE] Enter additional testcase. If you need newline, enter \\n")
+        print()
+        print("[random] add random testcases")
         print("[0] Return Edit testcase")
         select=input_clear()
         if select.lower()!="random":
@@ -478,7 +503,8 @@ def add_testcase(testcase):
             print("Successfully changed")
         else:
             while True:
-                print("[Number] Testcase to add")
+                print("[NUMBER] Testcase to add")
+                print()
                 print("[0] Return Edit Testcase")            
                 select=input_clear()
                 if select=='0':                                
@@ -539,17 +565,10 @@ def edit_path_or_testcase(path,filename):
             if result:
                 filename=result
 
-def default_setup():
-    clear()
-    path="C:\\"
-    filename=''
-    testcase=[]
-    auto_read_option=False
-    timeout=3
-    view_testcase=True
-    return path,filename,testcase,auto_read_option,timeout,view_testcase
+
 
 def main():
+    clear()
     path,filename,testcase,auto_read_option,timeout,view_testcase=default_setup()
     while True:
         c_file=path+filename
