@@ -446,7 +446,7 @@ def remove_testcase(testcase):
         print()
         print("[Reset] Remove all testcase")
         print("[Index] Remove index of testcase")
-        print("[0] Return Menu")
+        print("[0] Return Edit testcase")
         select=input_clear()
         if select.lower()=='reset':
             return []
@@ -469,7 +469,7 @@ def add_testcase(testcase):
         print()
         print("[Any testcase] Enter additional testcase")
         print("[Random] add random testcases")
-        print("[0] Return Menu")
+        print("[0] Return Edit testcase")
         select=input_clear()
         if select.lower()!="random":
             if select=='0':
@@ -505,59 +505,67 @@ def add_testcase(testcase):
                     except:
                         print("Wrong Input!!!")
 
-def main():
+def edit_testcase(testcase):
+    while True:             
+        lst_print(testcase)
+        print()
+        print("[0] Return to the menu")
+        print("[1] Add Testcase")
+        print("[2] Remove Testcase")
+        select=input_clear()
+        if select=='0':
+            return testcase
+        elif select=='1':
+            result=add_testcase(testcase)
+            if result:
+                testcase=result
+            else:
+                return testcase
+        elif select=='2':
+            testcase=remove_testcase(testcase)
+
+def edit_path_or_testcase(path,filename):
+    while True:
+        print("[0] Return Menu")
+        print("[1] Change Path")
+        print("[2] Change Filename")
+        select=input_clear()
+        if select=='0':
+            return path,filename
+        elif select=='1':
+            path=change_path(path)
+        elif select=="2":
+            result=change_file(path)
+            if result:
+                filename=result
+
+def default_setup():
+    clear()
     path="C:\\"
     filename=''
     testcase=[]
     auto_read_option=False
     timeout=3
     view_testcase=True
-    clear()
+    return path,filename,testcase,auto_read_option,timeout,view_testcase
+
+def main():
+    path,filename,testcase,auto_read_option,timeout,view_testcase=default_setup()
     while True:
         c_file=path+filename
         menu(c_file,testcase,auto_read_option,timeout,view_testcase)
         select=input_clear()
-        if select=='0': #0.Exit
+        if select=='0':
             quit()
-        elif select=='1': #1.Execute File
+        elif select=='1':
             execute_file(filename,c_file,testcase,auto_read_option,timeout)
-        elif select=='2': #2.Edit Path or Filename
-            while True:
-                print("[0] Return Menu")
-                print("[1] Change Path")
-                print("[2] Change Filename")
-                select=input_clear()
-                if select=='0':
-                    break
-                if select=='1':
-                    path=change_path(path)
-                elif select=="2":
-                    result=change_file(path)
-                    if result:
-                        filename=result
-                    
-        elif select=='3': #3.Edit Testcase
-            while True:             
-                lst_print(testcase)
-                print()
-                print("[0] Return to the menu")
-                print("[1] Add Testcase")
-                print("[2] Remove Testcase")
-                select=input_clear()
-                if select=='0':
-                    break
-                elif select=='1':
-                    result=add_testcase(testcase)
-                    if result:
-                        testcase=result
-                    else:
-                        break
-                elif select=='2':
-                    testcase=remove_testcase(testcase)
-                    break
-        elif select=='4': #4.Toggle Auto-read logs
+        elif select=='2':
+            path,filename=edit_path_or_testcase(path,filename)
+        elif select=='3':
+            testcase=edit_testcase(testcase)
+        elif select=='4':
             auto_read_option=not(auto_read_option)
-        elif select=='5': #5.Change Timeout
+        elif select=='5':
             timeout=change_timeout()
         elif select=='6':
             view_testcase=not(view_testcase)
